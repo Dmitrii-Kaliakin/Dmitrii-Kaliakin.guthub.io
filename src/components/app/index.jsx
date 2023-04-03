@@ -5,19 +5,28 @@ import { Header } from "../header";
 import { Sort } from "../sort";
 import { Logo } from "../logo";
 import { Search } from "../search";
-import { dataCard } from "../../data";
 import s from "./styles.module.css";
 import { Button } from "../button";
+// import styled from 'styled-components';
+import api from "../../utils/api";
+import { useDebounce } from "../../hooks/useDebounce";
+import { isLiked } from "../../utils/products";
 
 export function App() {
-  const [cards, setCards] = useState(dataCard);
+  const [cards, setCards] = useState([]);
+  const [currentUser, setCurrentUser] = useState([]);
   const [searchQuery, setSearchQuery] = useState("");
-
+  const debounceSearchQuery = useDebounce(searchQuery, 300);
   function handleRequest() {
-    const filterCards = dataCard.filter((item) =>
-      item.name.includes(searchQuery)
-    );
-    setCards(filterCards);
+    // const filterCards = dataCard.filter((item) =>
+    //   item.name.includes(searchQuery)
+    // );
+    // setCards(filterCards);
+
+    api.search(debounceSearchQuery).then((dataSearch) => {
+      setCards(dataSearch);
+      // console.log(data);
+    });
   }
 
   function handleFormSubmit(e) {
@@ -29,9 +38,40 @@ export function App() {
     setSearchQuery(dataInput);
   }
 
+  function handleUpdateUser(dataUserUpdate) {
+    api.setUserInfo(dataUserUpdate).then((updateUserFromServer) => {
+      setCurrentUser(updateUserFromServer);
+    });
+  }
+
+  function handleProductLike(product) {
+    const like = isLiked(product.likes, currentUser._id);
+    api.changeLikeProductStatus(product._id, like).then((updateCard) => {
+      const newProducts = cards.map((cardState) => {
+        return cardState._id === updateCard._id ? updateCard : cardState;
+      });
+
+      setCards(newProducts);
+    });
+  }
+
+  useEffect(() => {
+    handleRequest();
+  }, [debounceSearchQuery]);
+
+  useEffect(() => {
+    api
+      .getAllInfo()
+      .then(([productsData, userInfoData]) => {
+        setCurrentUser(userInfoData);
+        setCards(productsData.products);
+      })
+      .catch((err) => console.log(err));
+  }, []);
+
   return (
     <>
-      <Header>
+      <Header user={currentUser} onUpdateUser={handleUpdateUser}>
         <Logo />
         <Search
           handleFormSubmit={handleFormSubmit}
@@ -39,9 +79,12 @@ export function App() {
         />
       </Header>
       <main className="content container">
-        <Button htmlType="button">Купить</Button>
         <Sort />
-        <CardList goods={cards} />
+        <CardList
+          goods={cards}
+          onProductLike={handleProductLike}
+          currentUser={currentUser}
+        />
       </main>
       <Footer />
     </>
