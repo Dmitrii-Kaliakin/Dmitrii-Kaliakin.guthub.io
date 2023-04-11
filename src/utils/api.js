@@ -46,6 +46,16 @@ class Api {
       headers: this.#headers,
     }).then(this.#onResponse);
   }
+
+  getProductById(idProduct) {
+    return fetch(`${this.#baseurl}/products/${idProduct}`, {
+      headers: this.#headers,
+    }).then(this.#onResponse);
+  }
+
+  getInfoProduct(idProduct) {
+    return Promise.all([this.getProductById(idProduct), this.getUserInfo()]);
+  }
 }
 
 const api = new Api({
@@ -53,7 +63,7 @@ const api = new Api({
   headers: {
     "content-type": "application/json",
     authorization:
-      "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NDEwN2UwOGFhMzk3MTIxODM4ZjI4YzIiLCJncm91cCI6Imdyb3VwLTExIiwiaWF0IjoxNjc4ODAyNDQ1LCJleHAiOjE3MTAzMzg0NDV9.RLbCtjvzUzZAj7AOqF0vNQDYGH1UOIRQQQsId5FNkpc",
+      "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NDEwN2UwOGFhMzk3MTIxODM4ZjI4OTgiLCJncm91cCI6Imdyb3VwLTExIiwiaWF0IjoxNjc4ODAyNDQzLCJleHAiOjE3MTAzMzg0NDN9.Y7nuAVWeA_CGJipJNTktP9raSdpM41B3s-z4l-8rE70",
   },
 });
 

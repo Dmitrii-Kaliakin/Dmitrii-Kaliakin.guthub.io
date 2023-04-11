@@ -7,25 +7,31 @@ import { Logo } from "../logo";
 import { Search } from "../search";
 import s from "./styles.module.css";
 import { Button } from "../button";
-// import styled from 'styled-components';
+
 import api from "../../utils/api";
 import { useDebounce } from "../../hooks/useDebounce";
 import { isLiked } from "../../utils/products";
+import { CatalogPage } from "../../pages/catalog-page";
+import { ProductPage } from "../../pages/product-page";
+import FaqPage from "../../pages/faq-page";
+import { BrowserRouter, Route, Routes, useLocation } from "react-router-dom";
+import { NotFoundPage } from "../../pages/not-found-page";
+import { UserContext } from "../../contexts/current-user-context";
+import { CardsContext } from "../../contexts/card-context";
+import { ThemeContext, themes } from "../../contexts/theme-context";
 
 export function App() {
   const [cards, setCards] = useState([]);
-  const [currentUser, setCurrentUser] = useState([]);
+  const [currentUser, setCurrentUser] = useState(null);
   const [searchQuery, setSearchQuery] = useState("");
-  const debounceSearchQuery = useDebounce(searchQuery, 300);
-  function handleRequest() {
-    // const filterCards = dataCard.filter((item) =>
-    //   item.name.includes(searchQuery)
-    // );
-    // setCards(filterCards);
+  const [isLoading, setIsLoading] = useState(false);
+  const [theme, setTheme] = useState(themes.light);
 
+  const debounceSearchQuery = useDebounce(searchQuery, 300);
+
+  function handleRequest() {
     api.search(debounceSearchQuery).then((dataSearch) => {
       setCards(dataSearch);
-      // console.log(data);
     });
   }
 
@@ -46,12 +52,13 @@ export function App() {
 
   function handleProductLike(product) {
     const like = isLiked(product.likes, currentUser._id);
-    api.changeLikeProductStatus(product._id, like).then((updateCard) => {
+    return api.changeLikeProductStatus(product._id, like).then((updateCard) => {
       const newProducts = cards.map((cardState) => {
         return cardState._id === updateCard._id ? updateCard : cardState;
       });
-
       setCards(newProducts);
+
+      return updateCard;
     });
   }
 
@@ -60,33 +67,69 @@ export function App() {
   }, [debounceSearchQuery]);
 
   useEffect(() => {
+    setIsLoading(true);
     api
       .getAllInfo()
       .then(([productsData, userInfoData]) => {
         setCurrentUser(userInfoData);
         setCards(productsData.products);
       })
-      .catch((err) => console.log(err));
+      .catch((err) => console.log(err))
+      .finally(() => {
+        setIsLoading(false);
+      });
   }, []);
 
+  function toggleTheme() {
+    theme === themes.dark ? setTheme(themes.light) : setTheme(themes.dark);
+  }
+
   return (
-    <>
-      <Header user={currentUser} onUpdateUser={handleUpdateUser}>
-        <Logo />
-        <Search
-          handleFormSubmit={handleFormSubmit}
-          handleInputChange={handleInputChange}
-        />
-      </Header>
-      <main className="content container">
-        <Sort />
-        <CardList
-          goods={cards}
-          onProductLike={handleProductLike}
-          currentUser={currentUser}
-        />
-      </main>
-      <Footer />
-    </>
+    <ThemeContext.Provider value={{ theme, toggleTheme }}>
+      <CardsContext.Provider value={{ cards, handleLike: handleProductLike }}>
+        <UserContext.Provider
+          value={{ currentUser, onUpdateUser: handleUpdateUser }}
+        >
+          <Header user={currentUser}>
+            <Routes>
+              <Route
+                path="/"
+                element={
+                  <>
+                    <Logo />
+                    <Search
+                      handleFormSubmit={handleFormSubmit}
+                      handleInputChange={handleInputChange}
+                    />
+                  </>
+                }
+              />
+              <Route path="*" element={<Logo href="/" />} />
+            </Routes>
+          </Header>
+          <main
+            className="content container"
+            style={{ backgroundColor: theme.background }}
+          >
+            <Routes>
+              <Route
+                path="/"
+                element={
+                  <CatalogPage
+                    handleProductLike={handleProductLike}
+                    currentUser={currentUser}
+                    isLoading={isLoading}
+                  />
+                }
+              />
+              <Route path="/faq" element={<FaqPage />} />
+              <Route path="/product/:productID" element={<ProductPage />} />
+              <Route path="*" element={<NotFoundPage />} />
+            </Routes>
+          </main>
+          <Footer />
+        </UserContext.Provider>
+      </CardsContext.Provider>
+    </ThemeContext.Provider>
   );
 }
