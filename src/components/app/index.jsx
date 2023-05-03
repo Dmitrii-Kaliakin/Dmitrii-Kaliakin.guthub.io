@@ -86,7 +86,6 @@ export function App() {
   function handleProductLike(product) {
     const like = isLiked(product.likes, currentUser._id);
     return api.changeLikeProductStatus(product._id, like).then((updateCard) => {
-    return api.changeLikeProductStatus(product._id, like).then((updateCard) => {
       const newProducts = cards.map((cardState) => {
         return cardState._id === updateCard._id ? updateCard : cardState;
       });
@@ -110,7 +109,6 @@ export function App() {
 
   useEffect(() => {
     setIsLoading(true);
-    setIsLoading(true);
     api
       .getAllInfo()
       .then(([productsData, userInfoData]) => {
@@ -121,10 +119,6 @@ export function App() {
         );
         setFavorites(favoriteProducts);
       })
-      .catch((err) => console.log(err))
-      .finally(() => {
-        setIsLoading(false);
-      });
       .catch((err) => console.log(err))
       .finally(() => {
         setIsLoading(false);

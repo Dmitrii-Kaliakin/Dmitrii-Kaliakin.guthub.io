@@ -23,8 +23,6 @@ export function Card({
 }) {
   const discount_price = calcDiscountPrice(price, discount);
   const { currentUser } = useContext(UserContext);
-  const discount_price = calcDiscountPrice(price, discount);
-  const { currentUser } = useContext(UserContext);
 
   const { handleLike: onProductLike, isLoading } = useContext(CardsContext);
   const like = isLiked(likes, currentUser?._id);
