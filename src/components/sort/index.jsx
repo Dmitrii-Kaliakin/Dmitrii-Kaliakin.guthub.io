@@ -11,6 +11,7 @@ export function Sort({ tabs = [] }) {
     onSortData(tab.id);
   }
 
+<<<<<<< HEAD
   return (
     <div className={s.sort}>
       {tabs.map((tab) => (
@@ -27,4 +28,8 @@ export function Sort({ tabs = [] }) {
       ))}
     </div>
   );
+=======
+export function Sort() {
+  return <></>;
+>>>>>>> 25efa98f8b6dfeb23cd333ded8e02fa3cd31d7f2
 }

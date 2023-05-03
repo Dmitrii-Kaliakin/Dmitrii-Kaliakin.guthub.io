@@ -7,12 +7,17 @@ import { Logo } from "../logo";
 import { Search } from "../search";
 import s from "./styles.module.css";
 import { Button } from "../button";
+<<<<<<< HEAD
+=======
+
+>>>>>>> 25efa98f8b6dfeb23cd333ded8e02fa3cd31d7f2
 import api from "../../utils/api";
 import { useDebounce } from "../../hooks/useDebounce";
 import { isLiked } from "../../utils/products";
 import { CatalogPage } from "../../pages/catalog-page";
 import { ProductPage } from "../../pages/product-page";
 import FaqPage from "../../pages/faq-page";
+<<<<<<< HEAD
 import {
   BrowserRouter,
   Link,
@@ -21,10 +26,14 @@ import {
   useLocation,
   useNavigate,
 } from "react-router-dom";
+=======
+import { BrowserRouter, Route, Routes, useLocation } from "react-router-dom";
+>>>>>>> 25efa98f8b6dfeb23cd333ded8e02fa3cd31d7f2
 import { NotFoundPage } from "../../pages/not-found-page";
 import { UserContext } from "../../contexts/current-user-context";
 import { CardsContext } from "../../contexts/card-context";
 import { ThemeContext, themes } from "../../contexts/theme-context";
+<<<<<<< HEAD
 import { FavoritesPage } from "../../pages/favorite-page";
 import { TABS_ID } from "../../utils/constants";
 import Form from "../form";
@@ -36,10 +45,16 @@ import ResetPassword from "../reset-password";
 export function App() {
   const [cards, setCards] = useState([]);
   const [favorites, setFavorites] = useState([]);
+=======
+
+export function App() {
+  const [cards, setCards] = useState([]);
+>>>>>>> 25efa98f8b6dfeb23cd333ded8e02fa3cd31d7f2
   const [currentUser, setCurrentUser] = useState(null);
   const [searchQuery, setSearchQuery] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [theme, setTheme] = useState(themes.light);
+<<<<<<< HEAD
   const [currentSort, setCurrentSort] = useState("");
 
   const [modalFormStatus, setModalFormStatus] = useState(false);
@@ -62,6 +77,11 @@ export function App() {
     navigate(initialPath || "/", { replace: true });
   };
 
+=======
+
+  const debounceSearchQuery = useDebounce(searchQuery, 300);
+
+>>>>>>> 25efa98f8b6dfeb23cd333ded8e02fa3cd31d7f2
   function handleRequest() {
     api.search(debounceSearchQuery).then((dataSearch) => {
       setCards(dataSearch);
@@ -91,6 +111,7 @@ export function App() {
       });
       setCards(newProducts);
 
+<<<<<<< HEAD
       if (!like) {
         setFavorites((prevState) => [...prevState, updateCard]);
       } else {
@@ -99,6 +120,8 @@ export function App() {
         );
       }
 
+=======
+>>>>>>> 25efa98f8b6dfeb23cd333ded8e02fa3cd31d7f2
       return updateCard;
     });
   }
@@ -125,6 +148,7 @@ export function App() {
       });
   }, []);
 
+<<<<<<< HEAD
   function sortedData(currentSort) {
     console.log(currentSort);
 
@@ -143,10 +167,13 @@ export function App() {
     }
   }
 
+=======
+>>>>>>> 25efa98f8b6dfeb23cd333ded8e02fa3cd31d7f2
   function toggleTheme() {
     theme === themes.dark ? setTheme(themes.light) : setTheme(themes.dark);
   }
 
+<<<<<<< HEAD
   function addContact(dataInfo) {
     setContacts([...contacts, dataInfo]);
   }
@@ -208,10 +235,16 @@ export function App() {
           setCurrentSort,
         }}
       >
+=======
+  return (
+    <ThemeContext.Provider value={{ theme, toggleTheme }}>
+      <CardsContext.Provider value={{ cards, handleLike: handleProductLike }}>
+>>>>>>> 25efa98f8b6dfeb23cd333ded8e02fa3cd31d7f2
         <UserContext.Provider
           value={{ currentUser, onUpdateUser: handleUpdateUser }}
         >
           <Header user={currentUser}>
+<<<<<<< HEAD
             <Routes
               location={
                 (backgroundLocation && {
@@ -221,6 +254,9 @@ export function App() {
                 location
               }
             >
+=======
+            <Routes>
+>>>>>>> 25efa98f8b6dfeb23cd333ded8e02fa3cd31d7f2
               <Route
                 path="/"
                 element={
@@ -240,6 +276,7 @@ export function App() {
             className="content container"
             style={{ backgroundColor: theme.background }}
           >
+<<<<<<< HEAD
             <Routes
               location={
                 (backgroundLocation && {
@@ -249,6 +286,9 @@ export function App() {
                 location
               }
             >
+=======
+            <Routes>
+>>>>>>> 25efa98f8b6dfeb23cd333ded8e02fa3cd31d7f2
               <Route
                 path="/"
                 element={
@@ -259,6 +299,7 @@ export function App() {
                   />
                 }
               />
+<<<<<<< HEAD
               <Route path="/favorites" element={<FavoritesPage />} />
               <Route path="/faq" element={<FaqPage />} />
               <Route path="/product/:productID" element={<ProductPage />} />
@@ -286,10 +327,15 @@ export function App() {
                 path="/reset-password"
                 element={<ResetPassword onSubmit={cbSubmitFormResetPassword} />}
               />
+=======
+              <Route path="/faq" element={<FaqPage />} />
+              <Route path="/product/:productID" element={<ProductPage />} />
+>>>>>>> 25efa98f8b6dfeb23cd333ded8e02fa3cd31d7f2
               <Route path="*" element={<NotFoundPage />} />
             </Routes>
           </main>
           <Footer />
+<<<<<<< HEAD
           {backgroundLocation && (
             <Routes>
               <Route
@@ -325,6 +371,8 @@ export function App() {
               />
             </Routes>
           )}
+=======
+>>>>>>> 25efa98f8b6dfeb23cd333ded8e02fa3cd31d7f2
         </UserContext.Provider>
       </CardsContext.Provider>
     </ThemeContext.Provider>

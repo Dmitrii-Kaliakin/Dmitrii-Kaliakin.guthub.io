@@ -7,6 +7,7 @@ import { ReactComponent as LikeIcon } from "../../images/save.svg";
 import truck from "../../images/truck.svg";
 import quality from "../../images/quality.svg";
 import { useLocation, useNavigate } from "react-router-dom";
+<<<<<<< HEAD
 import { useContext, useState } from "react";
 import { UserContext } from "../../contexts/current-user-context";
 import { ContentHeader } from "../content-header";
@@ -15,6 +16,10 @@ import FormReview from "../form-review";
 
 function Product({
   putPostComment,
+=======
+
+function Product({
+>>>>>>> 25efa98f8b6dfeb23cd333ded8e02fa3cd31d7f2
   onProductLike,
   _id,
   name,
@@ -23,11 +28,20 @@ function Product({
   discount,
   price,
   likes = [],
+<<<<<<< HEAD
   reviews,
 }) {
   const { currentUser } = useContext(UserContext);
   const [currentRating, setCurrentRating] = useState(5);
   const navigate = useNavigate();
+=======
+  currentUser,
+  reviews,
+}) {
+  const navigate = useNavigate();
+  const location = useLocation();
+  console.log(location);
+>>>>>>> 25efa98f8b6dfeb23cd333ded8e02fa3cd31d7f2
   const discount_price = calcDiscountPrice(price, discount);
   const like = isLiked(likes, currentUser?._id);
   function handleLikeClick() {
@@ -40,12 +54,24 @@ function Product({
 
   return (
     <>
+<<<<<<< HEAD
       <ContentHeader textButton="Назад" title={name}>
         <p className={s.acticul}>
           Артикул: <b>2388907</b>
         </p>
         <Rating currentRating={currentRating} />
       </ContentHeader>
+=======
+      <div className={s.header}>
+        <a href="#" className="button-back" onClick={() => navigate(-1)}>
+          Назад
+        </a>
+        <h1 className={s.productTitle}>{name}</h1>
+        <p className={s.acticul}>
+          Аартикул: <b>2388907</b>
+        </p>
+      </div>
+>>>>>>> 25efa98f8b6dfeb23cd333ded8e02fa3cd31d7f2
       <div className={s.product}>
         <div className={s.imgWrapper}>
           <img src={pictures} alt={`Изображение ${name}`} />
@@ -136,12 +162,15 @@ function Product({
           </div>
         </div>
       </div>
+<<<<<<< HEAD
 
       <FormReview
         title={`Отзыв о товаре ${name}`}
         putPostComment={putPostComment}
         productId={_id}
       />
+=======
+>>>>>>> 25efa98f8b6dfeb23cd333ded8e02fa3cd31d7f2
     </>
   );
 }

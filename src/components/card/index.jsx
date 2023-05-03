@@ -7,7 +7,10 @@ import { Link } from "react-router-dom";
 import { useContext } from "react";
 import { UserContext } from "../../contexts/current-user-context";
 import { CardsContext } from "../../contexts/card-context";
+<<<<<<< HEAD
 import ContentLoader from "react-content-loader";
+=======
+>>>>>>> 25efa98f8b6dfeb23cd333ded8e02fa3cd31d7f2
 
 export function Card({
   name,
@@ -24,7 +27,11 @@ export function Card({
   const discount_price = calcDiscountPrice(price, discount);
   const { currentUser } = useContext(UserContext);
 
+<<<<<<< HEAD
   const { handleLike: onProductLike, isLoading } = useContext(CardsContext);
+=======
+  const { handleLike: onProductLike } = useContext(CardsContext);
+>>>>>>> 25efa98f8b6dfeb23cd333ded8e02fa3cd31d7f2
   const like = isLiked(likes, currentUser?._id);
 
   function handleClickButtonLike() {
@@ -43,6 +50,7 @@ export function Card({
           backgroundColor="#d4cece"
           foregroundColor="#dbdbdb"
         >
+<<<<<<< HEAD
           <path d="M 0 0 h 185.6 v 187 H 0 z M 0 203 h 186 v 14 H 0 z M 0 233 h 186 v 56 H 0 z M 0 305 h 186 v 24 H 0 z" />
           <rect x="0" y="345" rx="20" ry="20" width="121" height="40" />
         </ContentLoader>
@@ -96,5 +104,32 @@ export function Card({
         </article>
       )}
     </>
+=======
+          <LikeIcon className="card__favorite-icon" />
+        </button>
+      </div>
+
+      <Link to={`/product/${_id}`} className="card__link">
+        <img src={pictures} alt={name} className="card__image" />
+        <div className="card__desc">
+          {discount !== 0 ? (
+            <>
+              <span className="card__old-price">{price}&nbsp;₽</span>
+              <span className="card__price card__price_type_discount">
+                {discount_price}&nbsp;₽
+              </span>
+            </>
+          ) : (
+            <span className="card__price">{price}&nbsp;₽</span>
+          )}
+          <span className="card__wight">{wight}</span>
+          <h3 className="card__name">{name}</h3>
+        </div>
+      </Link>
+      <a href="#" className="card__cart btn btn_type_primary">
+        В корзину
+      </a>
+    </article>
+>>>>>>> 25efa98f8b6dfeb23cd333ded8e02fa3cd31d7f2
   );
 }
