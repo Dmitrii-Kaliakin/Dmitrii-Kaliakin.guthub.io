@@ -46,6 +46,24 @@ class Api {
       headers: this.#headers,
     }).then(this.#onResponse);
   }
+
+  getProductById(idProduct) {
+    return fetch(`${this.#baseurl}/products/${idProduct}`, {
+      headers: this.#headers,
+    }).then(this.#onResponse);
+  }
+
+  getInfoProduct(idProduct) {
+    return Promise.all([this.getProductById(idProduct), this.getUserInfo()]);
+  }
+
+  setProductCommentsById(idProduct, comment) {
+    return fetch(`${this.#baseurl}/products/review/${idProduct}`, {
+      method: "POST",
+      headers: this.#headers,
+      body: JSON.stringify(comment),
+    }).then(this.#onResponse);
+  }
 }
 
 const api = new Api({
