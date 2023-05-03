@@ -13,7 +13,6 @@ export function NotFound({
       <NotFoundIcon className={s.image} aria-hidden="true" />
       <h1 className={s.title}>{title}</h1>
       {children && children}
-<<<<<<< HEAD
       {buttonAction ? (
         <Button type="border" href="#" action={buttonAction}>
           {buttonText}
@@ -23,17 +22,6 @@ export function NotFound({
           {buttonText}
         </Button>
       )}
-=======
-      {buttonAction ? 
-        <Button type="border" href="#" action={buttonAction}>
-          {buttonText}
-        </Button>
-       : 
-        <Button type="border" href="/">
-          {buttonText}{" "}
-        </Button>
-      }
->>>>>>> 25efa98f8b6dfeb23cd333ded8e02fa3cd31d7f2
     </div>
   );
 }

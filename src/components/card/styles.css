@@ -28,10 +28,7 @@
   width: 100%;
   object-fit: contain;
   margin-bottom: 16px;
-<<<<<<< HEAD
   aspect-ratio: 1 / 1;
-=======
->>>>>>> 25efa98f8b6dfeb23cd333ded8e02fa3cd31d7f2
 }
 
 .card__old-price {
