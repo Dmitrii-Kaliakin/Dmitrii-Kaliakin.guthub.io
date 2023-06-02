@@ -1,58 +1,46 @@
-import { useCallback, useContext, useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
-import { CardList } from "../../components/card-list";
-import { NotFound } from "../../components/not-found";
-import Product from "../../components/product";
-import { Sort } from "../../components/sort";
-import { Spinner } from "../../components/spinner";
-import { CardsContext } from "../../contexts/card-context";
-import api from "../../utils/api";
-import { isLiked } from "../../utils/products";
-import { useApi } from "../../hooks";
-import { UserContext } from "../../contexts/current-user-context";
+import { useCallback, useContext, useEffect, useState } from 'react';
+import { useParams } from 'react-router-dom';
+import { CardList } from '../../components/card-list'
+import { NotFound } from '../../components/not-found';
+import Product from '../../components/product';
+import { Sort } from '../../components/sort'
+import { Spinner } from '../../components/spinner';
+import { CardsContext } from '../../contexts/card-context';
+import api from '../../utils/api';
+import { isLiked } from '../../utils/products';
+import { useApi } from '../../hooks';
+import { UserContext } from '../../contexts/current-user-context';
+import { useDispatch, useSelector } from 'react-redux';
+import { changeLikeState, fetchSingleProduct } from '../../storage/single-product/single-product-slice';
+import { fetchChangeLikeProduct } from '../../storage/products/products-slice';
+
 
 export const ProductPage = () => {
-  const { productID } = useParams();
+    const dispatch = useDispatch()
+    const { productID } = useParams();
 
-  const handleGetProduct = useCallback(
-    () => api.getProductById(productID),
-    [productID]
-  );
-  const {
-    data: product,
-    loading: isLoading,
-    error: errorState,
-    setData: setProduct,
-  } = useApi(handleGetProduct);
-  const { handleLike } = useContext(CardsContext);
+    const { data: product, loading: isLoading, error: errorState } = useSelector(state => state.singleProduct)
 
-  function handleProductLike(product) {
-    handleLike(product).then((updateCard) => {
-      setProduct(updateCard);
-    });
-  }
+    function handleProductLike(product) {
+        dispatch(fetchChangeLikeProduct(product)).then(updateCard => {
+            if (updateCard?.payload?.product) {
+                dispatch(changeLikeState(updateCard.payload.product))
+            }
+        });
+    }
+    useEffect(() => {
+        dispatch(fetchSingleProduct(productID))
+    }, [dispatch, productID])
 
-  function putPostComment(productId, data) {
-    api.setProductCommentsById(productId, data).then((updateCard) => {
-      setProduct(updateCard);
-    });
-  }
 
-  return (
-    <>
-      {isLoading ? (
-        <Spinner />
-      ) : (
-        !errorState && (
-          <Product
-            {...product}
-            onProductLike={handleProductLike}
-            putPostComment={putPostComment}
-          />
-        )
-      )}
+    return (
+        <>
+            {isLoading
+                ? <Spinner />
+                : !errorState && <Product onProductLike={handleProductLike} />
+            }
 
-      {!isLoading && errorState && <NotFound title="Товар не найден" />}
-    </>
-  );
-};
+            {!isLoading && errorState && <NotFound title="Товар не найден" />}
+        </>
+    )
+}

@@ -1,13 +1,15 @@
 import cn from "classnames";
-
 import "./styles.css";
 import { ReactComponent as LikeIcon } from "../../images/save.svg";
 import { calcDiscountPrice, isLiked } from "../../utils/products";
 import { Link } from "react-router-dom";
 import { useContext } from "react";
-import { UserContext } from "../../contexts/current-user-context";
 import { CardsContext } from "../../contexts/card-context";
 import ContentLoader from "react-content-loader";
+import { useDispatch, useSelector } from "react-redux";
+import { fetchChangeLikeProduct } from "../../storage/products/products-slice";
+import { ProductPrice } from "../product-price";
+import { addProductCart } from "../../storage/cart/cart-slice";
 
 export function Card({
   name,
@@ -19,19 +21,22 @@ export function Card({
   tags,
   likes,
   _id,
-  ...props
 }) {
+  const addDataProduct = { _id, name, pictures, discount, price, wight };
+  const dispatch = useDispatch();
   const discount_price = calcDiscountPrice(price, discount);
-  const { currentUser } = useContext(UserContext);
-
-  const { handleLike: onProductLike, isLoading } = useContext(CardsContext);
+  const currentUser = useSelector((state) => state.user.data);
+  const isLoading = useSelector((state) => state.products.loading);
   const like = isLiked(likes, currentUser?._id);
 
   function handleClickButtonLike() {
-    console.log(likes);
-    onProductLike({ likes, _id });
+    return dispatch(fetchChangeLikeProduct({ likes, _id }));
   }
 
+  function handleAddCartClick(e) {
+    e.preventDefault();
+    dispatch(addProductCart(addDataProduct));
+  }
   return (
     <>
       {isLoading ? (
@@ -72,25 +77,24 @@ export function Card({
               <LikeIcon className="card__favorite-icon" />
             </button>
           </div>
-
           <Link to={`/product/${_id}`} className="card__link">
-            <img src={pictures} alt={name} className="card__image" />
+            <img
+              src={pictures}
+              alt={name}
+              className="card__image"
+              loading="lazy"
+            />
             <div className="card__desc">
-              {discount !== 0 ? (
-                <>
-                  <span className="card__old-price">{price}&nbsp;₽</span>
-                  <span className="card__price card__price_type_discount">
-                    {discount_price}&nbsp;₽
-                  </span>
-                </>
-              ) : (
-                <span className="card__price">{price}&nbsp;₽</span>
-              )}
+              <ProductPrice discount={discount} price={price} type="small" />
               <span className="card__wight">{wight}</span>
               <h3 className="card__name">{name}</h3>
             </div>
           </Link>
-          <a href="#" className="card__cart btn btn_type_primary">
+          <a
+            href="#"
+            className="card__cart btn btn_type_primary"
+            onClick={handleAddCartClick}
+          >
             В корзину
           </a>
         </article>

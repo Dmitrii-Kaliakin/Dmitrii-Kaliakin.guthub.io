@@ -1,43 +1,52 @@
 import cn from "classnames";
-
 import { calcDiscountPrice, isLiked } from "../../utils/products";
 import { Button } from "../button";
 import s from "./styles.module.css";
 import { ReactComponent as LikeIcon } from "../../images/save.svg";
 import truck from "../../images/truck.svg";
 import quality from "../../images/quality.svg";
-import { useLocation, useNavigate } from "react-router-dom";
-import { useContext, useState } from "react";
-import { UserContext } from "../../contexts/current-user-context";
+import { useNavigate } from "react-router-dom";
+import { useState } from "react";
 import { ContentHeader } from "../content-header";
 import Rating from "../rating";
 import FormReview from "../form-review";
+import { useDispatch, useSelector } from "react-redux";
+import { Review } from "../review";
+import { addProductCart } from "../../storage/cart/cart-slice";
+import { ProductPrice } from "../product-price";
 
-function Product({
-  putPostComment,
-  onProductLike,
-  _id,
-  name,
-  pictures,
-  description,
-  discount,
-  price,
-  likes = [],
-  reviews,
-}) {
-  const { currentUser } = useContext(UserContext);
+function Product({ onProductLike }) {
+  const {
+    _id,
+    name,
+    pictures,
+    description,
+    wight,
+    discount,
+    price,
+    likes = [],
+    reviews,
+  } = useSelector((state) => state.singleProduct.data);
+  const addDataProduct = { _id, name, pictures, discount, price, wight };
+
+  const currentUser = useSelector((state) => state.user.data);
   const [currentRating, setCurrentRating] = useState(5);
-  const navigate = useNavigate();
+
+  const dispatch = useDispatch();
+
   const discount_price = calcDiscountPrice(price, discount);
   const like = isLiked(likes, currentUser?._id);
   function handleLikeClick() {
     onProductLike({ likes, _id });
   }
 
+  function handleCartClick(e) {
+    dispatch(addProductCart(addDataProduct));
+  }
+
   function createMarkupDescription() {
     return { __html: description };
   }
-
   return (
     <>
       <ContentHeader textButton="Назад" title={name}>
@@ -51,24 +60,14 @@ function Product({
           <img src={pictures} alt={`Изображение ${name}`} />
         </div>
         <div className={s.desc}>
-          {discount !== 0 ? (
-            <>
-              <span className={s.oldPrice}>{price}&nbsp;₽</span>
-              <span className={cn(s.price, s.price_discount)}>
-                {discount_price}&nbsp;₽
-              </span>
-            </>
-          ) : (
-            <span className={s.price}>{price}&nbsp;₽</span>
-          )}
-
+          <ProductPrice discount={discount} price={price} type="big" />
           <div className={s.btnWrap}>
             <div className={s.left}>
               <button className={s.minus}>-</button>
               <span className={s.num}>0</span>
               <button className={s.plus}>+</button>
             </div>
-            <Button href="#" type="primary">
+            <Button href="#" type="primary" action={handleCartClick}>
               В корзину
             </Button>
           </div>
@@ -136,14 +135,16 @@ function Product({
           </div>
         </div>
       </div>
-
-      <FormReview
-        title={`Отзыв о товаре ${name}`}
-        putPostComment={putPostComment}
-        productId={_id}
-      />
+      {reviews.length !== 0 && (
+        <div className={s.reviews}>
+          {" "}
+          {reviews.map((reviewData) => (
+            <Review {...reviewData} />
+          ))}
+        </div>
+      )}
+      <FormReview title={`Отзыв о товаре ${name}`} productId={_id} />
     </>
   );
 }
-
 export default Product;

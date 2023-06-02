@@ -1,5 +1,4 @@
 import cn from "classnames";
-
 import s from "./styles.module.css";
 export const Button = ({
   type,
@@ -11,7 +10,7 @@ export const Button = ({
 }) => {
   function handleClick(e) {
     href && e.preventDefault();
-    action();
+    action && action();
   }
 
   return href ? (

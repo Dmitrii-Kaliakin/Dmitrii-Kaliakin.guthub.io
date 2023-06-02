@@ -2,7 +2,6 @@ import s from "./styles.module.css";
 import { ReactComponent as StarIcon } from "./img/star.svg";
 import { useEffect, useState } from "react";
 import cn from "classnames";
-
 const MAX_COUNT_RATING = 5;
 
 function Rating({
@@ -29,31 +28,25 @@ function Rating({
         />
       );
     });
-
     setRatingArray(updateArray);
   };
-
   function changeDisplay(rating) {
     constructRating(rating);
   }
-
   function changeRating(rating) {
     if (!isEditable || !setCurrentRating) return;
     setCurrentRating(rating);
   }
-
   useEffect(() => {
     constructRating(currentRating);
   }, [currentRating]);
-
   return (
-    <>
+    <div>
       {ratingArray.map((r, i) => (
         <span key={i}>{r}</span>
       ))}
       {error && <span>{error?.message}</span>}
-    </>
+    </div>
   );
 }
-
 export default Rating;

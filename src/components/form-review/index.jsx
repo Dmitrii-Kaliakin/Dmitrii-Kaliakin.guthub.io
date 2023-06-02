@@ -2,15 +2,14 @@ import { Controller, useForm } from "react-hook-form";
 import Form from "../form";
 import FormInput from "../form-input";
 import FormButton from "../form-button";
-import { useState } from "react";
+import s from "./styles.module.css";
+import cn from "classnames";
 import Rating from "../rating";
-
-function FormReview({
-  title = "Отзыв о товаре",
-  productId,
-  setProduct,
-  putPostComment,
-}) {
+import { useState } from "react";
+import { useDispatch } from "react-redux";
+import { fetchCreateReview } from "../../storage/single-product/single-product-slice";
+function FormReview({ title = "Отзыв о товаре", productId }) {
+  const dispatch = useDispatch();
   const {
     register,
     control,
@@ -18,12 +17,10 @@ function FormReview({
     formState: { errors },
     reset,
   } = useForm({ mode: "onBlur" });
-
   const handleSubmitFormReview = (data) => {
-    putPostComment(productId, data);
+    dispatch(fetchCreateReview({ productId, data }));
     reset();
   };
-
   const textRegister = register("text", {
     required: {
       value: true,
@@ -63,6 +60,7 @@ function FormReview({
         {errors?.text && (
           <p className="errorMessage">{errors?.text?.message}</p>
         )}
+
         <FormButton type="submit" color="pramary">
           Отправить отзыв
         </FormButton>
@@ -70,4 +68,5 @@ function FormReview({
     </>
   );
 }
+
 export default FormReview;

@@ -1,11 +1,11 @@
 import React from "react";
-import "./styles.css";
+import './styles.css';
 import telegram from "./img/telegram.svg";
 import instagram from "./img/instagram.svg";
 import viber from "./img/viber.svg";
 import whatsapp from "./img/whatsapp.svg";
 import vk from "./img/vk.svg";
-import { Logo } from "../logo";
+import { Logo } from '../logo';
 
 export const Footer = () => {
   return (
@@ -13,12 +13,10 @@ export const Footer = () => {
       <div className="container">
         <div className="footer__wrapper">
           <div className="footer__col">
-            <Logo
-              className="logo footer__logo"
-              title="Логотип"
-              aria-hidden={true}
-            />
-            <p className="footer__copyright">© «Интернет-магазин DogFood.ru»</p>
+            <Logo className="logo footer__logo" title="Логотип" aria-hidden={true} />
+            <p className="footer__copyright">
+              © «Интернет-магазин DogFood.ru»
+            </p>
           </div>
           <div className="footer__col">
             <nav className="menu-bottom">
@@ -55,36 +53,22 @@ export const Footer = () => {
           <div className="footer__col">
             <div className="contacts">
               <p className="contacts__title">Мы на связи</p>
-              <a
-                className="contacts__tel contacts__link"
-                href="tel:89177172179"
-              >
+              <a className="contacts__tel contacts__link" href="tel:89177172179">
                 8 (999) 00-00-00
               </a>
-              <a
-                className="contacts__mail contacts__link"
-                href="mailto:hordog.ru@gmail.com"
-              >
+              <a className="contacts__mail contacts__link" href="mailto:hordog.ru@gmail.com">
                 dogfood.ru@gmail.com
               </a>
               <ul className="socials contacts__socials">
                 <li className="socials__item">
                   <a className="socials__link" href="/#">
-                    <img
-                      src={telegram}
-                      alt="telegram"
-                      className="socials__icon"
-                    />
+                    <img src={telegram} alt="telegram" className="socials__icon" />
                   </a>
                 </li>
 
                 <li className="socials__item">
                   <a className="socials__link" href="/#">
-                    <img
-                      src={whatsapp}
-                      alt="whatsapp"
-                      className="socials__icon"
-                    />
+                    <img src={whatsapp} alt="whatsapp" className="socials__icon" />
                   </a>
                 </li>
                 <li className="socials__item">
@@ -94,11 +78,7 @@ export const Footer = () => {
                 </li>
                 <li className="socials__item">
                   <a className="socials__link" href="/#">
-                    <img
-                      src={instagram}
-                      alt="instagram"
-                      className="socials__icon"
-                    />
+                    <img src={instagram} alt="instagram" className="socials__icon" />
                   </a>
                 </li>
                 <li className="socials__item">
@@ -108,6 +88,7 @@ export const Footer = () => {
                 </li>
               </ul>
             </div>
+
           </div>
         </div>
       </div>
